@@ -5,8 +5,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import au.org.teambacon.ftc.element.Gamepad;
 import au.org.teambacon.ftc.element.HardwareMap;
 import au.org.teambacon.ftc.element.Telemetry;
+import au.org.teambacon.ftc.game.Alliance;
 
 public abstract class Robot extends LinearOpMode {
+    protected Alliance alliance;
+
     protected Gamepad gamepad1;
     protected Gamepad gamepad2;
 
@@ -14,36 +17,24 @@ public abstract class Robot extends LinearOpMode {
     protected HardwareMap hardwareMap;
 
     public final void runOpMode() throws InterruptedException {
-        this.gamepad1 = new Gamepad(super.gamepad1);
-        this.gamepad2 = new Gamepad(super.gamepad2);
+        gamepad1 = new Gamepad(super.gamepad1);
+        gamepad2 = new Gamepad(super.gamepad2);
 
-        this.telemetry = new Telemetry(super.telemetry);
-        this.hardwareMap = new HardwareMap(super.hardwareMap);
-
-        Thread update = new Thread() {
-            @Override
-            public void run() {
-                while (opModeIsActive()) {
-                    gamepad1.update();
-                    gamepad2.update();
-
-                    try {
-                        Thread.sleep(1);
-                    } catch (InterruptedException e) {
-                    }
-                }
-            }
-        };
-        update.start();
+        telemetry = new Telemetry(super.telemetry);
+        hardwareMap = new HardwareMap(super.hardwareMap);
 
         load();
 
         waitForStart();
+        resetStartTime();
 
-        if (opModeIsActive())
+        if (!isStopRequested()) // triple check opmode is running
             run();
+    }
 
-        update.interrupt();
+    public synchronized final void gamepadUpdate() {
+        gamepad1.update();
+        gamepad2.update();
     }
 
     public abstract void load() throws InterruptedException;

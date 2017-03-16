@@ -7,7 +7,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-public class AdafruitBNO055IMUComponent implements Component, GyroComponent {
+public class AdafruitBNO055IMUComponent implements GyroComponent {
     protected AdafruitBNO055IMU imu;
 
     public AdafruitBNO055IMUComponent(AdafruitBNO055IMU imu) {

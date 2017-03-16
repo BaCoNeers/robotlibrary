@@ -14,20 +14,40 @@ public class DriveHelper {
         this.driveRight = driveRight;
     }
 
-    public void initializeEncoderDistanceDrive(double power, double distance) {
-        driveLeft.addToTarget(driveLeft.calculateDistanceTicks(distance));
-        driveRight.addToTarget(driveRight.calculateDistanceTicks(distance));
-
-        driveLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        driveRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
+    public void drive(double power) {
         driveLeft.setPower(power);
         driveRight.setPower(power);
     }
 
-    public void headingCorrection(double headingError, double power) {
-        double steer = calculateSteer(headingError, power);
+    public void drive(double leftPower, double rightPower) {
+        driveLeft.setPower(leftPower);
+        driveRight.setPower(rightPower);
+    }
 
+    public void setMode(DcMotor.RunMode mode) {
+        driveLeft.setMode(mode);
+        driveRight.setMode(mode);
+    }
+
+
+    public boolean isBothBusy() {
+        return driveLeft.isBusy() && driveRight.isBusy();
+    }
+
+    public boolean isEitherBusy() {
+        return driveLeft.isBusy() || driveRight.isBusy();
+    }
+
+    public void initializeEncoderDistanceDrive(double power, double distance) {
+        driveLeft.addToTarget(driveLeft.calculateDistanceTicks(distance));
+        driveRight.addToTarget(driveRight.calculateDistanceTicks(distance));
+
+        setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        drive(power);
+    }
+
+    public void driveBySteer(double steer, double power) {
         if (driveLeft.getTarget() < 0)
             steer = -steer;
 
@@ -41,27 +61,16 @@ public class DriveHelper {
             rightPower /= max;
         }
 
-        driveLeft.setPower(leftPower);
-        driveRight.setPower(rightPower);
+        drive(leftPower, rightPower);
     }
 
-    public boolean isBothBusy() {
-        return driveLeft.isBusy() && driveRight.isBusy();
-    }
-
-    public boolean isEitherBusy() {
-        return driveLeft.isBusy() || driveRight.isBusy();
-    }
-
-    public static double calculateSteer(double power, double error) {
-        if (Math.abs(error) < 0.7)
+    public static double calculateSteer(double power, double headingError) {
+        if (Math.abs(headingError) < 0.7)
             return 0;
 
-        double steer = power * Math.atan((1 / (10 * power)) * error);
+        double steer = 0.5 * power * Math.atan((1 / (75 * power)) * headingError);
 
         power = Math.abs(power);
         return Range.clip(steer, -power, power);
-
-        //return range(steer, -1, 1);
     }
 }

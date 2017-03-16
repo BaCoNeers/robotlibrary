@@ -3,18 +3,21 @@ package au.org.teambacon.ftc.robot.velocityvortex;
 import com.qualcomm.hardware.adafruit.AdafruitBNO055IMU;
 import com.qualcomm.hardware.adafruit.BNO055IMU;
 import com.qualcomm.hardware.adafruit.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 import au.org.teambacon.ftc.component.AdafruitBNO055IMUComponent;
+import au.org.teambacon.ftc.element.ButtonState;
 import au.org.teambacon.ftc.element.Robot;
 import au.org.teambacon.ftc.component.MotorComponent;
+import au.org.teambacon.ftc.game.Alliance;
 
 public abstract class VelocityVortex extends Robot {
     public static final boolean DEBUG = true;
-    public static final boolean DRIVE_ENABLED = false;
+    public static final boolean DRIVE_ENABLED = true;
     public static final boolean IMU_ENABLED = true;
 
     public static final double DRIVE_WHEEL_DIAMETER = 0.09814;
@@ -34,7 +37,14 @@ public abstract class VelocityVortex extends Robot {
             driveLeft.setTicksPerMeter(DRIVE_WHEEL_DIAMETER, DRIVE_GEAR_REDUCTION);
             driveRight.setTicksPerMeter(DRIVE_WHEEL_DIAMETER, DRIVE_GEAR_REDUCTION);
 
-            driveRight.setDirection(DcMotorSimple.Direction.REVERSE);
+            driveLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+
+            driveLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            driveRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            driveLeft.setTarget(0);
+            driveRight.setTarget(0);
+            driveLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            driveRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
         if (IMU_ENABLED) {
@@ -52,25 +62,23 @@ public abstract class VelocityVortex extends Robot {
         }
 
         if (DEBUG) {
-            Thread debugTelemetry = new Thread() {
+            new Thread() {
                 @Override
                 public void run() {
-                    while (opModeIsActive()) {
+                    while (!isStopRequested()) {
                         if (DRIVE_ENABLED) {
                             telemetry.set("D|DRIVE_L_POWER", "%f", driveLeft.getPower());
-
+                            telemetry.set("D|DRIVE_L_MODE", "%s", driveLeft.getMode().toString());
                             if (driveLeft.getMotorType().hasEncoder()) {
-                                telemetry.set("D|DRIVE_L_TARGET", "%f", driveLeft.getTarget());
-                                telemetry.set("D|DRIVE_L_POS", "%f", driveLeft.getPosition());
-                                telemetry.set("D|DRIVE_L_MODE", "%s", driveLeft.getMode().toString());
+                                telemetry.set("D|DRIVE_L_TARGET", "%d", driveLeft.getTarget());
+                                telemetry.set("D|DRIVE_L_POS", "%d", driveLeft.getPosition());
                             }
 
                             telemetry.set("D|DRIVE_R_POWER", "%f", driveRight.getPower());
-
+                            telemetry.set("D|DRIVE_R_MODE", "%s", driveRight.getMode().toString());
                             if (driveRight.getMotorType().hasEncoder()) {
-                                telemetry.set("D|DRIVE_R_TARGET", "%f", driveRight.getTarget());
-                                telemetry.set("D|DRIVE_R_POS", "%f", driveRight.getPosition());
-                                telemetry.set("D|DRIVE_R_MODE", "%s", driveRight.getMode().toString());
+                                telemetry.set("D|DRIVE_R_TARGET", "%d", driveRight.getTarget());
+                                telemetry.set("D|DRIVE_R_POS", "%d", driveRight.getPosition());
                             }
                         }
 
@@ -79,8 +87,18 @@ public abstract class VelocityVortex extends Robot {
                         }
                     }
                 }
-            };
-            debugTelemetry.start();
+            }.start();
+        }
+
+        while (!isStarted()) {
+            gamepadUpdate();
+
+            if (gamepad1.X == ButtonState.PRESSED)
+                alliance = Alliance.BLUE;
+            else if (gamepad1.B == ButtonState.PRESSED)
+                alliance = Alliance.RED;
+
+            telemetry.set("ALLIANCE", "%s", alliance != null ? alliance.toString() : "not set");
         }
     }
 }

@@ -10,8 +10,8 @@ public class MotorComponent implements Component {
     protected int ticksPerMeter;
 
     public MotorComponent(DcMotor motor, MotorType motorType) {
-        motor = motor;
-        motorType = motorType;
+        this.motor = motor;
+        this.motorType = motorType;
 
         motor.setPower(0); // stop motors on start
 
@@ -101,9 +101,9 @@ public class MotorComponent implements Component {
 
     public enum MotorType {
         GENERIC(0, 0),
-        NEVEREST20_ENCODER(1680, 0),
+        NEVEREST20_ENCODER(747, 0),
         NEVEREST40_ENCODER(1120, 3000),
-        NEVEREST60_ENCODER(747, 3000);
+        NEVEREST60_ENCODER(1680, 3600);
 
         private int CPR; // counts per revolution
         private int CPS; // counts per second (at full speed)

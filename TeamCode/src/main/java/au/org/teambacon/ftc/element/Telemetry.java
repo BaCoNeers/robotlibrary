@@ -2,11 +2,12 @@ package au.org.teambacon.ftc.element;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Telemetry {
     protected org.firstinspires.ftc.robotcore.external.Telemetry telemetry;
 
-    protected HashMap<String, Object> values = new HashMap<String, Object>();
+    protected ConcurrentHashMap<String, Object> values = new ConcurrentHashMap<String, Object>();
 
     public Telemetry(org.firstinspires.ftc.robotcore.external.Telemetry telemetry) {
         this.telemetry = telemetry;
@@ -16,24 +17,24 @@ public class Telemetry {
         return telemetry;
     }
 
-    public void set(String key, String format, Object ... args) {
+    public synchronized void set(String key, String format, Object ... args) {
         String value = String.format(format, args);
 
         values.put(key, value);
         update();
     }
 
-    public void clear(String key) {
+    public synchronized void clear(String key) {
         values.remove(key);
         update();
     }
 
-    public void clear() {
+    public synchronized void clear() {
         values.clear();
         update();
     }
 
-    public void update() {
+    public synchronized void update() {
         telemetry.clear();
 
         for (Map.Entry<String, Object> entry : values.entrySet()) {
