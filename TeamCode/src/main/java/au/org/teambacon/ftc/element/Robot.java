@@ -2,9 +2,6 @@ package au.org.teambacon.ftc.element;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import au.org.teambacon.ftc.element.Gamepad;
-import au.org.teambacon.ftc.element.HardwareMap;
-import au.org.teambacon.ftc.element.Telemetry;
 import au.org.teambacon.ftc.game.Alliance;
 
 public abstract class Robot extends LinearOpMode {
