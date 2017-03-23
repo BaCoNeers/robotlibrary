@@ -137,7 +137,7 @@ public abstract class VelocityVortex extends Robot {
         }
 
         while (!isStarted()) {
-            gamepadUpdate();
+            gamepad1.update();
 
             if (gamepad1.X == ButtonState.PRESSED)
                 alliance = Alliance.BLUE;

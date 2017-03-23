@@ -8,7 +8,7 @@ import au.org.teambacon.ftc.utility.Range;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Velocity Vortex - Autonomous", group = "Velocity Vortex")
 public class Autonomous extends VelocityVortex {
-    DriveHelper drive;
+    private DriveHelper drive;
 
     @Override
     public void run() throws InterruptedException {

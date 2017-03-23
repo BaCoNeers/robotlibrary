@@ -20,18 +20,13 @@ public abstract class Robot extends LinearOpMode {
         telemetry = new Telemetry(super.telemetry);
         hardwareMap = new HardwareMap(super.hardwareMap);
 
-        load();
+        load(); // map hardware (motors, servos, sensors, etc)
 
-        waitForStart();
-        resetStartTime();
+        waitForStart(); // wait for start button to be pressed
+        resetStartTime(); // reset total running time (start of opmode)
 
-        if (!isStopRequested()) // triple check opmode is running
-            run();
-    }
-
-    public synchronized final void gamepadUpdate() {
-        gamepad1.update();
-        gamepad2.update();
+        if (!isStopRequested()) // double check opmode is running (waitForStart and !isStopRequested)
+            run(); // start opmode (child function)
     }
 
     public abstract void load() throws InterruptedException;
