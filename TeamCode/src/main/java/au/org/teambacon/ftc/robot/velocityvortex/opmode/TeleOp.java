@@ -8,7 +8,7 @@ public class TeleOp extends VelocityVortex {
         while (!isStopRequested()) {
             gamepadUpdate();
 
-            if (DRIVE_ENABLED) {
+            if (ENABLE_DRIVE) {
                 double rotation = -gamepad1.LEFT_STICK_X * 0.5;
                 double power = gamepad1.RIGHT_TRIGGER - gamepad1.LEFT_TRIGGER;
 
