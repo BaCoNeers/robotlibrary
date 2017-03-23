@@ -12,7 +12,7 @@ public class Autonomous extends VelocityVortex {
 
     @Override
     public void run() throws InterruptedException {
-        if (!ENABLE_DRIVE || !ENABLE_IMU)
+        if (!DRIVE_ENABLED || !IMU_ENABLED)
             return;
 
         drive = new DriveHelper(driveLeft, driveRight);

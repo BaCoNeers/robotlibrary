@@ -10,7 +10,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 import au.org.teambacon.ftc.component.AdafruitBNO055IMUComponent;
-import au.org.teambacon.ftc.component.ServoComponent;
 import au.org.teambacon.ftc.element.ButtonState;
 import au.org.teambacon.ftc.element.Robot;
 import au.org.teambacon.ftc.component.MotorComponent;
@@ -18,17 +17,8 @@ import au.org.teambacon.ftc.game.Alliance;
 
 public abstract class VelocityVortex extends Robot {
     public static final boolean DEBUG = true;
-
-    public static final boolean ENABLE_DRIVE = true;
-
-    public static final boolean ENABLE_BEACON = true;
-    public static final boolean ENABLE_BUFFER = true;
-    public static final boolean ENABLE_HARVESTER = true;
-    public static final boolean ENABLE_LAUNCHER = true;
-    public static final boolean ENABLE_LIFT = true;
-    public static final boolean ENABLE_PARTICLELIFT = true;
-
-    public static final boolean ENABLE_IMU = true;
+    public static final boolean DRIVE_ENABLED = true;
+    public static final boolean IMU_ENABLED = true;
 
     public static final double DRIVE_WHEEL_DIAMETER = 0.09814;
     public static final double DRIVE_GEAR_REDUCTION = 0.5;
@@ -36,19 +26,11 @@ public abstract class VelocityVortex extends Robot {
     protected MotorComponent driveLeft;
     protected MotorComponent driveRight;
 
-    protected MotorComponent motorBuffer;
-    protected MotorComponent motorHarvester;
-    protected MotorComponent motorLauncher;
-    protected MotorComponent motorLift;
-    protected MotorComponent motorParticleLift;
-
-    protected ServoComponent servoBeacon;
-
     protected AdafruitBNO055IMUComponent imu;
 
     @Override
     public void load() throws InterruptedException {
-        if (ENABLE_DRIVE) {
+        if (DRIVE_ENABLED) {
             driveLeft = hardwareMap.getMotor("drive_left", MotorComponent.MotorType.NEVEREST60_ENCODER);
             driveRight = hardwareMap.getMotor("drive_right", MotorComponent.MotorType.NEVEREST60_ENCODER);
 
@@ -65,34 +47,7 @@ public abstract class VelocityVortex extends Robot {
             driveRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
-        if (ENABLE_BEACON) {
-            servoBeacon = hardwareMap.getServo("servo_beacon");
-        }
-
-        if (ENABLE_BUFFER) {
-            motorBuffer = hardwareMap.getMotor("motor_harvester", MotorComponent.MotorType.GENERIC);
-            motorBuffer.setDirection(DcMotorSimple.Direction.REVERSE);
-        }
-
-        if (ENABLE_HARVESTER) {
-            motorHarvester = hardwareMap.getMotor("motor_harvester", MotorComponent.MotorType.GENERIC);
-        }
-
-        if (ENABLE_LAUNCHER) {
-            motorLauncher = hardwareMap.getMotor("motor_launcher", MotorComponent.MotorType.GENERIC);
-            motorLauncher.setDirection(DcMotorSimple.Direction.REVERSE);
-        }
-
-        if (ENABLE_LIFT) {
-            motorLift = hardwareMap.getMotor("motor_lift", MotorComponent.MotorType.GENERIC);
-            motorLift.setDirection(DcMotorSimple.Direction.REVERSE);
-        }
-
-        if (ENABLE_PARTICLELIFT) {
-            motorParticleLift = hardwareMap.getMotor("motor_particlelift", MotorComponent.MotorType.GENERIC);
-        }
-
-        if (ENABLE_IMU) {
+        if (IMU_ENABLED) {
             imu = hardwareMap.getImu("imu_robot");
 
             AdafruitBNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -111,7 +66,7 @@ public abstract class VelocityVortex extends Robot {
                 @Override
                 public void run() {
                     while (!isStopRequested()) {
-                        if (ENABLE_DRIVE) {
+                        if (DRIVE_ENABLED) {
                             telemetry.set("D|DRIVE_L_POWER", "%f", driveLeft.getPower());
                             telemetry.set("D|DRIVE_L_MODE", "%s", driveLeft.getMode().toString());
                             if (driveLeft.getMotorType().hasEncoder()) {
@@ -127,7 +82,7 @@ public abstract class VelocityVortex extends Robot {
                             }
                         }
 
-                        if (ENABLE_IMU) {
+                        if (IMU_ENABLED) {
                             telemetry.set("D|IMU_HEADING", "%f", imu.getHeading());
                         }
                     }
