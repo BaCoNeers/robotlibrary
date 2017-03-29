@@ -29,7 +29,6 @@ public class DriveHelper {
         driveRight.setMode(mode);
     }
 
-
     public boolean isBothBusy() {
         return driveLeft.isBusy() && driveRight.isBusy();
     }

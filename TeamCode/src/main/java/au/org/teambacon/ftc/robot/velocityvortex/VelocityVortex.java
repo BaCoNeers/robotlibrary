@@ -81,7 +81,6 @@ public abstract class VelocityVortex extends Robot {
 
         if (ENABLE_LAUNCHER) {
             motorLauncher = hardwareMap.getMotor("motor_launcher", MotorComponent.MotorType.GENERIC);
-            motorLauncher.setDirection(DcMotorSimple.Direction.REVERSE);
         }
 
         if (ENABLE_LIFT) {
@@ -99,6 +98,7 @@ public abstract class VelocityVortex extends Robot {
             AdafruitBNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
             parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
             parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+            parameters.calibrationDataFile = "AdafruitIMUCalibration.json";
             parameters.loggingEnabled = true;
             parameters.loggingTag = "IMU";
             parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
