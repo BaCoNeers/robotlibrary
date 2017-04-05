@@ -18,10 +18,11 @@ import au.org.teambacon.ftc.component.MotorComponent;
 import au.org.teambacon.ftc.game.Alliance;
 
 public abstract class VelocityVortex extends Robot {
+    // debug status (whether to output status of various components to telemetry)
     public static final boolean DEBUG = true;
 
+    // component enabled declarations
     public static final boolean ENABLE_DRIVE = true;
-
     public static final boolean ENABLE_BEACON = true;
     public static final boolean ENABLE_BUFFER = true;
     public static final boolean ENABLE_HARVESTER = true;
@@ -31,9 +32,11 @@ public abstract class VelocityVortex extends Robot {
 
     public static final boolean ENABLE_IMU = true;
 
+    // robot constant definitions/declarations
     public static final double DRIVE_WHEEL_DIAMETER = 0.09814;
     public static final double DRIVE_GEAR_REDUCTION = 0.5;
 
+    // robot component declarations
     protected MotorComponent driveLeft;
     protected MotorComponent driveRight;
 
@@ -53,11 +56,15 @@ public abstract class VelocityVortex extends Robot {
             driveLeft = hardwareMap.getMotor("drive_left", MotorComponent.MotorType.NEVEREST60_ENCODER);
             driveRight = hardwareMap.getMotor("drive_right", MotorComponent.MotorType.NEVEREST60_ENCODER);
 
+            // set encoder distance calculation variables
             driveLeft.setTicksPerMeter(DRIVE_WHEEL_DIAMETER, DRIVE_GEAR_REDUCTION);
             driveRight.setTicksPerMeter(DRIVE_WHEEL_DIAMETER, DRIVE_GEAR_REDUCTION);
 
+            // reverse left drive side to account for backwards/inverse motor mounting
             driveLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
+            // reset drive motors to a default starting status
+            // (reset what isnt restart when the 'robot isnt restarted'
             driveLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             driveRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             driveLeft.setTarget(0);
@@ -66,6 +73,7 @@ public abstract class VelocityVortex extends Robot {
             driveRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
+        // define components if they are 'enabled'
         if (ENABLE_BEACON) {
             servoBeacon = hardwareMap.getServo("servo_beacon");
         }
@@ -136,15 +144,21 @@ public abstract class VelocityVortex extends Robot {
             }.start();
         }
 
+        // alliance selector
         while (!isStarted()) {
-            gamepad1.update();
+            gamepad1.update(); // update button states
+            // gamepad 2's update function not required as we only read input from controller 1
+            // in this state - pending start to be pressed on the driver station
 
-            if (gamepad1.X == ButtonState.PRESSED)
+            if (gamepad1.X == ButtonState.PRESSED) // blue button on controller (X)
                 alliance = Alliance.BLUE;
-            else if (gamepad1.B == ButtonState.PRESSED)
+            else if (gamepad1.B == ButtonState.PRESSED) // red button on controller (B)
                 alliance = Alliance.RED;
 
+            // output status back to telemetry
             telemetry.set("ALLIANCE", "%s", alliance != null ? alliance.toString() : "not set");
+
+            sleep(1); // slow processing (prevent battery significantly draining from doing 'nothing'
         }
     }
 }

@@ -45,8 +45,6 @@ public class Autonomous extends VelocityVortex {
             if (steer == 0)
                 break;
 
-            steer = Range.clip(steer, -power, power);
-
             drive.drive(steer, -steer);
         }
     }

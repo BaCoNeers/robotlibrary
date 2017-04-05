@@ -9,24 +9,42 @@ public class TeleOp extends VelocityVortex {
     private DriveHelper drive;
 
     public void run() throws InterruptedException {
+        // define drive helper (if drive enabled)
+        // drive helper bundles the functions which correspond to
         if (ENABLE_DRIVE)
             drive = new DriveHelper(driveLeft, driveRight);
 
         while (!isStopRequested()) {
-            gamepad1.update();
+            gamepad1.update(); // update gamepads (button states)
             gamepad2.update();
 
+            // drive calculations
             if (ENABLE_DRIVE) {
                 double rotation = gamepad1.LEFT_STICK_X * 0.5;
                 double power = gamepad1.RIGHT_TRIGGER - gamepad1.LEFT_TRIGGER;
 
-                if (gamepad1.A == ButtonState.ACTIVE)
+                if (gamepad1.A == ButtonState.ACTIVE) // decrease power
                     power /= 3;
 
-                if (gamepad1.B == ButtonState.ACTIVE)
+                if (gamepad1.B == ButtonState.ACTIVE) // decrease rotation
                     rotation /= 2;
 
-                drive.drive(power + rotation, power - rotation);
+                double leftPower = power + rotation;
+                double rightPower = power - rotation;
+
+                // scale/normalize power (increases agility when moving faster - ensures motor
+                // power doesnt max (1), therefore increase effect of rotation variable on power)
+                // get which variable has higher value of leftPower and rightPower
+                double max = Math.max(leftPower, rightPower);
+
+                // if the highest is greater than maximum
+                if (max > 1) {
+                    // scale both back to maximum evenly
+                    leftPower /= max;
+                    rightPower /= max;
+                }
+
+                drive.drive(leftPower, rightPower); // set motor powers
             }
 
             if (ENABLE_BEACON) {
