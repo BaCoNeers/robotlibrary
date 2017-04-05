@@ -33,7 +33,7 @@ public class TeleOp extends VelocityVortex {
                 double rightPower = power - rotation;
 
                 // scale/normalize power (increases agility when moving faster - ensures motor
-                // power doesnt max (1), therefore increase effect of rotation variable on power)
+                // power doesn't max (1), therefore increase effect of rotation variable on power)
                 // get which variable has higher value of leftPower and rightPower
                 double max = Math.max(leftPower, rightPower);
 
@@ -69,11 +69,46 @@ public class TeleOp extends VelocityVortex {
                 else
                     motorHarvester.stop();
 
-            if (ENABLE_LAUNCHER)
-                if (gamepad2.B == ButtonState.ACTIVE && !gamepad2.getGamepad().start)
+            int launcherQueue = 0;
+            boolean sensorActive = true;
+            boolean pendingRevolutionToComplete = false;
+
+            if (ENABLE_LAUNCHER) {
+                /*if (gamepad2.B == ButtonState.ACTIVE && !gamepad2.getGamepad().start)
                     motorLauncher.forwards();
                 else
-                    motorLauncher.stop();
+                    motorLauncher.stop();*/
+
+                if (gamepad1.Y == ButtonState.PRESSED)
+                    launcherQueue++;
+
+                if (sensorActive) {
+                    if (launcherQueue > 0) {
+                        motorLauncher.forwards(); // run to clear queue
+
+                        if (!pendingRevolutionToComplete) {
+                            launcherQueue--;
+                        }
+                    } else {
+                        motorLauncher.stop(); // stop - cam active on sensor (in stationary position)
+                    }
+
+                    pendingRevolutionToComplete = true;
+                } else {
+                    if (launcherQueue > 0) {
+                        if (motorLauncher.getPower() != 0) {
+                            // currently running
+                            pendingRevolutionToComplete = false;
+                        } else {
+                            // power was not set
+                            // should not be achievable
+                            motorLauncher.forwards();
+                        }
+                    } else {
+                        motorLauncher.forwards(); // continue running until it achieves sensor active - to then stop the motor
+                    }
+                }
+            }
 
             if (ENABLE_LIFT)
                 if (gamepad1.LEFT_BUMPER == ButtonState.ACTIVE)
