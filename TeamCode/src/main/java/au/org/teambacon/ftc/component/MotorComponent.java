@@ -9,6 +9,8 @@ public class MotorComponent implements Component {
 
     protected int ticksPerMeter;
 
+    protected double _lastPowerSet = 0;
+
     public MotorComponent(DcMotor motor, MotorType motorType) {
         this.motor = motor;
         this.motorType = motorType;
@@ -28,11 +30,22 @@ public class MotorComponent implements Component {
     }
 
     public void setPower(double power) {
+        if (getPower() != power) {
+            motor.setPower(power);
+
+            _lastPowerSet = power;
+        }
+    }
+
+    public void rawSetPower(double power) {
         motor.setPower(power);
+
+        _lastPowerSet = power;
     }
 
     public double getPower() {
-        return motor.getPower();
+        return _lastPowerSet;
+        //return motor.getPower();
     }
 
     public void setTarget(int target) {
