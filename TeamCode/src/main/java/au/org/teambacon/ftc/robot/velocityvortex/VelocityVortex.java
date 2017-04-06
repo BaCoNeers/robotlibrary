@@ -12,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import au.org.teambacon.ftc.component.AdafruitBNO055IMUComponent;
 import au.org.teambacon.ftc.component.CrServoComponent;
 import au.org.teambacon.ftc.component.ServoComponent;
+import au.org.teambacon.ftc.component.TouchSensorComponent;
 import au.org.teambacon.ftc.element.ButtonState;
 import au.org.teambacon.ftc.element.Robot;
 import au.org.teambacon.ftc.component.MotorComponent;
@@ -48,6 +49,7 @@ public abstract class VelocityVortex extends Robot {
     protected CrServoComponent crServoBuffer;
     protected ServoComponent servoBeacon;
 
+    protected TouchSensorComponent touchSensorLauncher;
     protected AdafruitBNO055IMUComponent imu;
 
     @Override
@@ -89,6 +91,8 @@ public abstract class VelocityVortex extends Robot {
 
         if (ENABLE_LAUNCHER) {
             motorLauncher = hardwareMap.getMotor("motor_launcher", MotorComponent.MotorType.GENERIC);
+
+            touchSensorLauncher = hardwareMap.getTouchSensor("touchsensor_launcher");
         }
 
         if (ENABLE_LIFT) {

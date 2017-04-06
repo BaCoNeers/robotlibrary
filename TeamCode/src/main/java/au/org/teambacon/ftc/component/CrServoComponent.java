@@ -4,41 +4,41 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 public class CrServoComponent implements Component {
-    protected CRServo CrServo;
+    protected CRServo crServo;
 
-    public CrServoComponent(CRServo servo) {
-        CrServo = servo;
+    public CrServoComponent(CRServo crServo) {
+        crServo = servo;
     }
 
     public CRServo getCrServo() {
-        return CrServo;
+        return crServo;
     }
 
     public void setPower(double power) {
-        CrServo.setPower(power);
+        crServo.setPower(power);
     }
 
     public double getPower() {
-        return CrServo.getPower();
+        return crServo.getPower();
     }
 
     public void setDiretion(DcMotorSimple.Direction direction) {
-        CrServo.setDirection(direction);
+        crServo.setDirection(direction);
     }
 
     public DcMotorSimple.Direction getDirection() {
-        return CrServo.getDirection();
+        return crServo.getDirection();
     }
 
     public void forwards() {
-        CrServo.setPower(1);
+        crServo.setPower(1);
     }
 
     public void stop() {
-        CrServo.setPower(0);
+        crServo.setPower(0);
     }
 
     public void backwards() {
-        CrServo.setPower(-1);
+        crServo.setPower(-1);
     }
 }

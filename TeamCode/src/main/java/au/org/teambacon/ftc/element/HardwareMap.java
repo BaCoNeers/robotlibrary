@@ -6,6 +6,7 @@ import au.org.teambacon.ftc.component.CrServoComponent;
 import au.org.teambacon.ftc.component.AdafruitBNO055IMUComponent;
 import au.org.teambacon.ftc.component.MotorComponent;
 import au.org.teambacon.ftc.component.ServoComponent;
+import au.org.teambacon.ftc.component.TouchSensorComponent;
 
 public class HardwareMap {
     protected com.qualcomm.robotcore.hardware.HardwareMap hardwareMap;
@@ -32,5 +33,9 @@ public class HardwareMap {
 
     public AdafruitBNO055IMUComponent getImu(String name) {
         return new AdafruitBNO055IMUComponent(hardwareMap.get(AdafruitBNO055IMU.class, name));
+    }
+
+    public TouchSensorComponent getTouchSensor(String name) {
+        return new TouchSensorComponent(hardwareMap.touchSensor.get(name));
     }
 }

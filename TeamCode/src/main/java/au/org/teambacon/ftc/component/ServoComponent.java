@@ -3,29 +3,29 @@ package au.org.teambacon.ftc.component;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class ServoComponent implements Component {
-    protected Servo Servo;
+    protected Servo servo;
 
     public ServoComponent(Servo servo) {
-        Servo = servo;
+        this.servo = servo;
     }
 
     public Servo getServo() {
-        return Servo;
+        return servo;
     }
 
     public void setPosition(double position) {
-        Servo.setPosition(position);
+        servo.setPosition(position);
     }
 
     public double getPosition() {
-        return Servo.getPosition();
+        return servo.getPosition();
     }
 
     public void setDiretion(Servo.Direction diretion) {
-        Servo.setDirection(diretion);
+        servo.setDirection(diretion);
     }
 
     public Servo.Direction getDirection() {
-        return Servo.getDirection();
+        return servo.getDirection();
     }
 }
