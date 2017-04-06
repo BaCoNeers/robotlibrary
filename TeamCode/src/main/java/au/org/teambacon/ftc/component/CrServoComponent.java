@@ -7,7 +7,7 @@ public class CrServoComponent implements Component {
     protected CRServo crServo;
 
     public CrServoComponent(CRServo crServo) {
-        crServo = servo;
+        this.crServo = crServo;
     }
 
     public CRServo getCrServo() {
