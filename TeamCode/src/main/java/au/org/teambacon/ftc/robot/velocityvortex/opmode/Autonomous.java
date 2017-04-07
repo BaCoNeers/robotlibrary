@@ -4,28 +4,23 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import au.org.teambacon.ftc.robot.velocityvortex.VelocityVortex;
 import au.org.teambacon.ftc.robot.velocityvortex.helper.DriveHelper;
-import au.org.teambacon.ftc.utility.Range;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Velocity Vortex - Autonomous", group = "Velocity Vortex")
 public class Autonomous extends VelocityVortex {
-    private DriveHelper drive;
-
     @Override
     public void run() throws InterruptedException {
         if (!ENABLE_DRIVE || !ENABLE_IMU)
             return;
 
-        drive = new DriveHelper(driveLeft, driveRight);
-
         imuDrive(1, 1, 0);
     }
 
     public void imuDrive(double power, double distance, double headingFromInitial) {
-        drive.initializeEncoderDistanceDrive(power, distance);
+        driveHelper.initializeEncoderDistanceDrive(power, distance);
 
-        while (drive.isBothBusy() && !isStopRequested())
-            drive.driveBySteer(
-                    drive.calculateSteer(
+        while (driveHelper.isBothBusy() && !isStopRequested())
+            driveHelper.driveBySteer(
+                    DriveHelper.calculateSteer(
                             power,
                             imu.getHeadingError(headingFromInitial)
                     ),
@@ -34,10 +29,10 @@ public class Autonomous extends VelocityVortex {
     }
 
     public void imuTurn(double power, double headingFromInitial) {
-        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        driveHelper.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         while (!isStopRequested()) {
-            double steer = drive.calculateSteer(
+            double steer = DriveHelper.calculateSteer(
                     power,
                     imu.getHeadingError(-headingFromInitial)
             );
@@ -45,7 +40,7 @@ public class Autonomous extends VelocityVortex {
             if (steer == 0)
                 break;
 
-            drive.drive(steer, -steer);
+            driveHelper.drive(steer, -steer);
         }
     }
 }

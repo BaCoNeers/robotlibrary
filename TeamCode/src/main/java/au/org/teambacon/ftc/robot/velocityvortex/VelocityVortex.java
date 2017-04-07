@@ -17,6 +17,7 @@ import au.org.teambacon.ftc.element.ButtonState;
 import au.org.teambacon.ftc.element.Robot;
 import au.org.teambacon.ftc.component.MotorComponent;
 import au.org.teambacon.ftc.game.Alliance;
+import au.org.teambacon.ftc.robot.velocityvortex.helper.DriveHelper;
 
 public abstract class VelocityVortex extends Robot {
     // debug status (whether to output status of various components to telemetry)
@@ -52,6 +53,10 @@ public abstract class VelocityVortex extends Robot {
     protected TouchSensorComponent touchSensorLauncher;
     protected AdafruitBNO055IMUComponent imu;
 
+    // declare drive helper (if drive enabled)
+    // drive helper bundles the functions which correspond to driving
+    protected DriveHelper driveHelper;
+
     @Override
     public void load() throws InterruptedException {
         if (ENABLE_DRIVE) {
@@ -66,13 +71,17 @@ public abstract class VelocityVortex extends Robot {
             driveLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
             // reset drive motors to a default starting status
-            // (reset what isnt restart when the 'robot isnt restarted'
-            driveLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            driveRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            // (reset what isnt reset when the 'robot is restarted')
+            driveHelper = new DriveHelper(driveLeft, driveRight);
+
+            driveHelper.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            idle();
+
             driveLeft.setTarget(0);
             driveRight.setTarget(0);
-            driveLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            driveRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+            driveLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            idle();
         }
 
         // define components if they are 'enabled'

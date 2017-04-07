@@ -2,18 +2,10 @@ package au.org.teambacon.ftc.robot.velocityvortex.opmode;
 
 import au.org.teambacon.ftc.element.ButtonState;
 import au.org.teambacon.ftc.robot.velocityvortex.VelocityVortex;
-import au.org.teambacon.ftc.robot.velocityvortex.helper.DriveHelper;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Velocity Vortex - TeleOp", group = "Velocity Vortex")
 public class TeleOp extends VelocityVortex {
-    private DriveHelper drive;
-
     public void run() throws InterruptedException {
-        // define drive helper (if drive enabled)
-        // drive helper bundles the functions which correspond to
-        if (ENABLE_DRIVE)
-            drive = new DriveHelper(driveLeft, driveRight);
-
         while (!isStopRequested()) {
             gamepad1.update(); // update gamepads (button states)
             gamepad2.update();
@@ -44,7 +36,7 @@ public class TeleOp extends VelocityVortex {
                     rightPower /= max;
                 }
 
-                drive.drive(leftPower, rightPower); // set motor powers
+                driveHelper.drive(leftPower, rightPower); // set motor powers
             }
 
             if (ENABLE_BEACON) {
